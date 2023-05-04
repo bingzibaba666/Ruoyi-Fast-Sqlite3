@@ -1,0 +1,17 @@
+log/
+target/
+bin/
+main.sql
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.local
+
+
+**/node_modules/
+
+**/package-lock.json
+**/yarn.lock
