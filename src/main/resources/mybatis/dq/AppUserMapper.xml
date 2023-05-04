@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.project.dq.mapper.AppUserMapper">
+
+	<select id="get" resultType="java.util.Map">
+		select `app_user_id`,`username`,`password`,`account_status`,IFNULL(truename,'') as truename,`money`,`rechargeamount`,`rewardamount`,`rewardbalance`,`phone`,IFNULL(wx,'') as wx,`create_date`,`create_by`,`update_date`,`update_by`,`role_id`,`yqm` from dq_app_user where app_user_id = #{value}
+	</select>
+	
+	<select id="getByUsername" resultType="java.util.Map">
+		select `app_user_id`,`username`,`password`,`account_status`,`truename`,`money`,`rechargeamount`,`rewardamount`,`rewardbalance`,`phone`,`wx`,`create_date`,`create_by`,`update_date`,`update_by`,`role_id`,`yqm` from dq_app_user where username = #{value}
+	</select>
+
+	<update id="addAmount" parameterType="java.util.Map">
+		update dq_app_user set `money` = money + #{money} where app_user_id = #{app_user_id}
+	</update>
+	
+	<update id="addRechargeAmount" parameterType="java.util.Map">
+		update dq_app_user set `rechargeamount` = rechargeamount + #{money} where app_user_id = #{app_user_id}
+	</update>
+	
+	<update id="addRewardAmount" parameterType="java.util.Map">
+		update dq_app_user set `rewardamount` = rewardamount + #{money} where app_user_id = #{app_user_id}
+	</update>
+	
+	<update id="addRewardbalanceAmount" parameterType="java.util.Map">
+		update dq_app_user set `rewardbalance` = rewardbalance + #{money} where app_user_id = #{app_user_id}
+	</update>
+	
+	<update id="subtractAmount" parameterType="java.util.Map">
+		update dq_app_user set `money` = money - #{money} where app_user_id = #{app_user_id}
+	</update>
+	
+	<update id="subtractRewardbalance" parameterType="java.util.Map">
+		update dq_app_user set `rewardbalance` = rewardbalance - #{money} where app_user_id = #{app_user_id}
+	</update>
+
+	<select id="list" resultType="java.util.Map">
+		select `app_user_id`,`username`,`password`,`account_status`,`truename`,`money`,`rechargeamount`,`rewardamount`,`rewardbalance`,`phone`,`wx`,`create_date`,`create_by`,`update_date`,`update_by`,`role_id`,`yqm` from dq_app_user
+        <where>  
+		  		  <if test="app_user_id != null and app_user_id != ''"> and app_user_id = #{app_user_id} </if>
+		  		  <if test="username != null and username != ''"> and username = #{username} </if>
+		  		  <if test="password != null and password != ''"> and password = #{password} </if>
+		  		  <if test="account_status != null and account_status != ''"> and account_status = #{account_status} </if>
+		  		  <if test="truename != null and truename != ''"> and truename = #{truename} </if>
+		  		  <if test="money != null and money != ''"> and money = #{money} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  	
+		  		  <if test="wx != null and wx != ''"> and wx = #{wx} </if>
+		  		  <if test="searchName!=null and searchName!=''">
+				 	and
+						(
+							 username LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+						)
+			 	  </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by app_user_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from dq_app_user
+		 <where>  
+		  		  <if test="app_user_id != null and app_user_id != ''"> and app_user_id = #{app_user_id} </if>
+		  		  <if test="username != null and username != ''"> and username = #{username} </if>
+		  		  <if test="password != null and password != ''"> and password = #{password} </if>
+		  		  <if test="account_status != null and account_status != ''"> and account_status = #{account_status} </if>
+		  		  <if test="truename != null and truename != ''"> and truename = #{truename} </if>
+		  		  <if test="money != null and money != ''"> and money = #{money} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="wx != null and wx != ''"> and wx = #{wx} </if>
+		  		  <if test="searchName!=null and searchName!=''">
+				 	and
+						(
+							 username LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+						)
+			 	  </if>
+		  		</where>
+	</select>
+	 
+	
+	
+	<delete id="batchRemove">
+		delete from dq_app_user where app_user_id in 
+		<foreach item="appUserId" collection="array" open="(" separator="," close=")">
+			#{appUserId}
+		</foreach>
+	</delete>
+</mapper>
